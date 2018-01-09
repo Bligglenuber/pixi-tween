@@ -429,6 +429,7 @@ export default class Tween extends PIXI.utils.EventEmitter {
      * @fires PIXI.tween.Tween#repeat
      *
      * @param {number} deltaMS - Time elapsed in milliseconds from last update to this update.
+     * @param {number} progress - 0-1 decimal value representing proportion of completion.
      */
     update(deltaMS) {
         if (!this._canUpdate() && (this._to || this.path)) {
@@ -460,8 +461,9 @@ export default class Tween extends PIXI.utils.EventEmitter {
             this._apply(time);
 
             const realElapsed = this._pingPong ? time + this._elapsedTime : this._elapsedTime;
+            const progress = realElapsed / this.time;
 
-            this.emit('update', realElapsed);
+            this.emit('update', realElapsed, progress);
 
             if (ended) {
                 if (this.pingPong && !this._pingPong) {
