@@ -25,7 +25,7 @@ import Easing from './Easing';
  *
  * @event PIXI.tween.Tween#update
  * @param {number} progress - 0-1 decimal value representing proportion of completion.
- * @param {number} elapsedTime - How much time in ms that has passed since the tween started
+ * @param {number} elapsedTime - How much time in ms that has passed since the tween started.
  */
 
 /**
@@ -132,6 +132,7 @@ export default class Tween extends PIXI.utils.EventEmitter {
         this._resetFromOnStart = false;
         this._delayTime = 0;
         this._elapsedTime = 0;
+        this._progress = 0;
         this._repeat = 0;
         this._pingPong = false;
 
@@ -235,6 +236,16 @@ export default class Tween extends PIXI.utils.EventEmitter {
      */
     get elapsedTime() {
         return this._elapsedTime;
+    }
+
+    /**
+     * 0-1 decimal value representing proportion of completion
+     *
+     * @member {number}
+     * @readonly
+     */
+    get progress() {
+        return this._progress;
     }
 
     /**
@@ -403,6 +414,7 @@ export default class Tween extends PIXI.utils.EventEmitter {
      */
     reset() {
         this._elapsedTime = 0;
+        this._progress = 0;
         this._repeat = 0;
         this._delayTime = 0;
         this._isStarted = false;
@@ -461,9 +473,9 @@ export default class Tween extends PIXI.utils.EventEmitter {
             this._apply(time);
 
             const realElapsed = this._pingPong ? time + this._elapsedTime : this._elapsedTime;
-            const progress = realElapsed / this.time;
+            this._progress = realElapsed / this.time;
 
-            this.emit('update', progress, realElapsed);
+            this.emit('update', this._progress, realElapsed);
 
             if (ended) {
                 if (this.pingPong && !this._pingPong) {
@@ -482,6 +494,7 @@ export default class Tween extends PIXI.utils.EventEmitter {
 
                     this.emit('pingpong');
                     this._elapsedTime = 0;
+                    this._progress = 0.5;
 
                     return;
                 }
@@ -490,6 +503,7 @@ export default class Tween extends PIXI.utils.EventEmitter {
                     ++this._repeat;
                     this.emit('repeat', this._repeat);
                     this._elapsedTime = 0;
+                    this._progress = 0;
 
                     if (this.pingPong && this._pingPong) {
                         _to = this._to;
@@ -528,7 +542,6 @@ export default class Tween extends PIXI.utils.EventEmitter {
         this._isEnded = true;
         this._active = false;
         this.emit('end');
-        this._elapsedTime = 0;
 
         if (this._chainTween) {
             if (!this._chainTween.manager) {
