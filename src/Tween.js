@@ -25,7 +25,7 @@ import Easing from './Easing';
  *
  * @event PIXI.tween.Tween#update
  * @param {number} progress - 0-1 decimal value representing proportion of completion.
- * @param {number} elapsedTime - Time in ms since last update event was emitted
+ * @param {number} elapsedTime - How much time in ms that has passed since the tween started
  */
 
 /**
