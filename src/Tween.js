@@ -55,6 +55,7 @@ import Easing from './Easing';
  * @property {boolean} [pingPong]
  * @property {number} [repeat]
  * @property {number} [time]
+ * @property {number} [speed]
  * @property {Object} [on]
  * @property {function} [on.end]
  * @property {function} [on.pingpong]
@@ -122,6 +123,9 @@ export default class Tween extends PIXI.utils.EventEmitter {
 
         /** @member {number} - How long to animate this tween over */
         this.time = 0;
+
+        /** @member {number} - The speed that the tween will play at. 0 effectively pauses it, 1 is normal speed */
+        this.speed = 1;
 
         this._active = false;
         this._isStarted = false;
@@ -192,6 +196,9 @@ export default class Tween extends PIXI.utils.EventEmitter {
         }
         if (typeof config.time === 'number') {
             this.time = config.time;
+        }
+        if (typeof config.speed === 'number') {
+            this.speed = config.speed;
         }
 
         if (config.on && typeof config.on === 'object') {
@@ -447,6 +454,8 @@ export default class Tween extends PIXI.utils.EventEmitter {
         if (!this._canUpdate() && (this._to || this.path)) {
             return;
         }
+        
+        deltaMS *= this.speed;
 
         if (this.delay > this._delayTime) {
             this._delayTime += deltaMS;
