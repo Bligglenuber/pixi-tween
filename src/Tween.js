@@ -24,6 +24,7 @@ import Easing from './Easing';
  * Fired at each frame
  *
  * @event PIXI.tween.Tween#update
+ * @param {number} progress - 0-1 decimal value representing proportion of completion.
  * @param {number} elapsedTime - Time in ms since last update event was emitted
  */
 
@@ -429,7 +430,6 @@ export default class Tween extends PIXI.utils.EventEmitter {
      * @fires PIXI.tween.Tween#repeat
      *
      * @param {number} deltaMS - Time elapsed in milliseconds from last update to this update.
-     * @param {number} progress - 0-1 decimal value representing proportion of completion.
      */
     update(deltaMS) {
         if (!this._canUpdate() && (this._to || this.path)) {
